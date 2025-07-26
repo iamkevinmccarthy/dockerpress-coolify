@@ -25,6 +25,7 @@ function update_wp_config() {
   wp config set WP_MEMORY_LIMIT 512M --add --type=constant
   wp config set WP_MAX_MEMORY_LIMIT 512M --add --type=constant
   wp config set DISABLE_WP_CRON $DISABLE_WP_CRON --raw --add --type=constant
+  wp config set MYSQL_CLIENT_FLAGS MYSQLI_CLIENT_SSL --raw --type=constant
 }
 
 function generate_litespeed_password() {
@@ -73,10 +74,10 @@ function setup_mysql_optimize() {
 function create_wordpress_database() {
   if [ -n "$MYSQL_ROOT_PASSWORD" ]; then
     echo "Try create Database if not exists using root ..."
-    mysql --no-defaults -h $WORDPRESS_DB_HOST --port $WORDPRESS_DB_PORT -u root -p$MYSQL_ROOT_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;"
+    mysql --ssl-mode=REQUIRED --no-defaults -h $WORDPRESS_DB_HOST --port $WORDPRESS_DB_PORT -u root -p$MYSQL_ROOT_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;"
   else
     echo "Try create Database if not exists using $WORDPRESS_DB_USER user ..."
-    mysql --no-defaults -h $WORDPRESS_DB_HOST --port $WORDPRESS_DB_PORT -u $WORDPRESS_DB_USER -p$WORDPRESS_DB_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;"
+    mysql --ssl-mode=REQUIRED --no-defaults -h $WORDPRESS_DB_HOST --port $WORDPRESS_DB_PORT -u $WORDPRESS_DB_USER -p$WORDPRESS_DB_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;"
   fi
 }
 
