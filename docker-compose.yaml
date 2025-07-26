@@ -3,11 +3,11 @@ services:
   wordpress-ols:
     image: luizeof/dockerpress:latest
     environment:
-      - WORDPRESS_DB_HOST=${WORDPRESS_DB_HOST}
+      - WORDPRESS_DB_HOST=${WORDPRESS_DB_HOST}:${WORDPRESS_DB_PORT}
       - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
       - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
       - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME}
-      - VIRTUAL_HOST=${VIRTUAL_HOST}
+      - VIRTUAL_HOST=${SERVICE_FQDN_WORDPRESS_OLS}
       - ADMIN_EMAIL=${ADMIN_EMAIL}
     volumes:
       - wp-data:/var/www/html
