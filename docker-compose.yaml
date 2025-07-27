@@ -3,7 +3,7 @@ services:
   wordpress-ols:
     image: luizeof/dockerpress:latest
     environment:
-      - WORDPRESS_URL=$SERVICE_FQDN_WORDPRESS_OLS
+      - SERVICE_URL=$SERVICE_FQDN_WORDPRESS_OLS
       - WORDPRESS_DB_HOST=${WORDPRESS_DB_HOST}
       - WORDPRESS_DB_PORT=${WORDPRESS_DB_PORT}
       - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
