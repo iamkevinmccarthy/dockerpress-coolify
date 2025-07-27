@@ -14,8 +14,8 @@ function finish() {
 
 function update_wp_config() {
   echo "Updating wp-config.php ..."
-  wp config set WP_SITEURL "$SERVICE_URL" --add --type=constant --path=/var/www/html
-  wp config set WP_HOME "$SERVICE_URL" --add --type=constant --path=/var/www/html
+  wp config set WP_SITEURL "$WORDPRESS_URL" --add --type=constant --path=/var/www/html
+  wp config set WP_HOME "$WORDPRESS_URL" --add --type=constant --path=/var/www/html
   wp config set DB_NAME $WORDPRESS_DB_NAME --add --type=constant --path=/var/www/html
   wp config set DB_USER $WORDPRESS_DB_USER --add --type=constant --path=/var/www/html
   wp config set DB_PASSWORD $WORDPRESS_DB_PASSWORD --add --type=constant --path=/var/www/html
@@ -100,8 +100,8 @@ function install_wordpress() {
 
     # if Wordpress is installed
     if ! $(wp core is-installed --path=/var/www/html); then
-      echo "Installing Wordpress for $SERVICE_URL ..."
-      wp core install --url=$SERVICE_URL \
+      echo "Installing Wordpress for $WORDPRESS_URL ..."
+      wp core install --url=$WORDPRESS_URL \
         --title=Wordpress \
         --admin_user=$ADMIN_USER \
         --admin_password=$ADMIN_PASS \
