@@ -131,7 +131,7 @@ RUN install_packages \
 	"tzdata"
 
 # PHP Settings
-RUN  sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /usr/local/lsws/lsphp${PHP_VER}/etc/php/${PHP_VER%.*}/litespeed/php.ini
+RUN sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /usr/local/lsws/lsphp${PHP_VER}/etc/php/${PHP_VER%.*}/litespeed/php.ini
 RUN sed -i 's/post_max_size = 8M/post_max_size = 256M/g' /usr/local/lsws/lsphp${PHP_VER}/etc/php/${PHP_VER%.*}/litespeed/php.ini
 RUN sed -i 's/memory_limit = 128M/memory_limit = 512M/g' /usr/local/lsws/lsphp${PHP_VER}/etc/php/${PHP_VER%.*}/litespeed/php.ini
 
