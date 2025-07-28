@@ -24,7 +24,6 @@ function update_wp_config() {
   wp config set WP_MEMORY_LIMIT 512M --add --type=constant --path=/var/www/html
   wp config set WP_MAX_MEMORY_LIMIT 512M --add --type=constant --path=/var/www/html
   wp config set DISABLE_WP_CRON $DISABLE_WP_CRON --raw --add --type=constant --path=/var/www/html
-  wp config set MYSQL_CLIENT_FLAGS MYSQLI_CLIENT_SSL --raw --type=constant --path=/var/www/html
 }
 
 function generate_litespeed_password() {
