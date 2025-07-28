@@ -8,6 +8,7 @@ WORKDIR /var/www/html
 
 # Define PHP version
 ARG PHP_VER=8.3
+ARG PHP_PKG=83
 
 # ENV Defaults
 ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
@@ -89,36 +90,36 @@ RUN install_packages \
 
 # Install the PHP
 RUN install_packages \
-	"lsphp${PHP_VER%.*}"
+	"lsphp${PHP_PKG}"
 
 # Install PHP modules
 RUN install_packages \
-	"lsphp${PHP_VER%.*}-apcu" \
-	"lsphp${PHP_VER%.*}-common" \
-	"lsphp${PHP_VER%.*}-curl" \
-	"lsphp${PHP_VER%.*}-igbinary" \
-	"lsphp${PHP_VER%.*}-imagick" \
-	"lsphp${PHP_VER%.*}-imap" \
-	"lsphp${PHP_VER%.*}-intl" \
-	"lsphp${PHP_VER%.*}-ldap" \
-	"lsphp${PHP_VER%.*}-memcached" \
-	"lsphp${PHP_VER%.*}-msgpack" \
-	"lsphp${PHP_VER%.*}-mysql" \
-	"lsphp${PHP_VER%.*}-opcache" \
-	"lsphp${PHP_VER%.*}-pear" \
-	"lsphp${PHP_VER%.*}-pgsql" \
-	"lsphp${PHP_VER%.*}-pspell" \
-	"lsphp${PHP_VER%.*}-redis" \
-	"lsphp${PHP_VER%.*}-sqlite3" \
-	"lsphp${PHP_VER%.*}-tidy"
+	"lsphp${PHP_PKG}-apcu" \
+	"lsphp${PHP_PKG}-common" \
+	"lsphp${PHP_PKG}-curl" \
+	"lsphp${PHP_PKG}-igbinary" \
+	"lsphp${PHP_PKG}-imagick" \
+	"lsphp${PHP_PKG}-imap" \
+	"lsphp${PHP_PKG}-intl" \
+	"lsphp${PHP_PKG}-ldap" \
+	"lsphp${PHP_PKG}-memcached" \
+	"lsphp${PHP_PKG}-msgpack" \
+	"lsphp${PHP_PKG}-mysql" \
+	"lsphp${PHP_PKG}-opcache" \
+	"lsphp${PHP_PKG}-pear" \
+	"lsphp${PHP_PKG}-pgsql" \
+	"lsphp${PHP_PKG}-pspell" \
+	"lsphp${PHP_PKG}-redis" \
+	"lsphp${PHP_PKG}-sqlite3" \
+	"lsphp${PHP_PKG}-tidy"
 
 # Set the default PHP CLI
 RUN ln --symbolic --force \
-	"/usr/local/lsws/lsphp${PHP_VER%.*}/bin/lsphp" \
+	"/usr/local/lsws/lsphp${PHP_PKG}/bin/lsphp" \
 	"/usr/local/lsws/fcgi-bin/lsphp5"
 
 RUN ln --symbolic --force \
-    "/usr/local/lsws/lsphp${PHP_VER%.*}/bin/php${PHP_VER}" \
+    "/usr/local/lsws/lsphp${PHP_PKG}/bin/php${PHP_VER}" \
     "/usr/bin/php"
 
 # Install the certificates
@@ -131,11 +132,11 @@ RUN install_packages \
 	"tzdata"
 
 # PHP Settings
-RUN sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /usr/local/lsws/lsphp${PHP_VER%.*}/etc/php/${PHP_VER}/litespeed/php.ini
-RUN sed -i 's/post_max_size = 8M/post_max_size = 256M/g' /usr/local/lsws/lsphp${PHP_VER%.*}/etc/php/${PHP_VER}/litespeed/php.ini
-RUN sed -i 's/memory_limit = 128M/memory_limit = 512M/g' /usr/local/lsws/lsphp${PHP_VER%.*}/etc/php/${PHP_VER}/litespeed/php.ini
+RUN sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /usr/local/lsws/lsphp${PHP_PKG}/etc/php/${PHP_VER}/litespeed/php.ini
+RUN sed -i 's/post_max_size = 8M/post_max_size = 256M/g' /usr/local/lsws/lsphp${PHP_PKG}/etc/php/${PHP_VER}/litespeed/php.ini
+RUN sed -i 's/memory_limit = 128M/memory_limit = 512M/g' /usr/local/lsws/lsphp${PHP_PKG}/etc/php/${PHP_VER}/litespeed/php.ini
 
-COPY php/config/opcache.ini /usr/local/lsws/lsphp${PHP_VER%.*}/etc/php/${PHP_VER}/mods-available/opcache.ini
+COPY php/config/opcache.ini /usr/local/lsws/lsphp${PHP_PKG}/etc/php/${PHP_VER}/mods-available/opcache.ini
 
 RUN touch /var/www/.opcache
 
