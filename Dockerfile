@@ -173,8 +173,9 @@ COPY --chown="lsadm:lsadm" \
 	"php/litespeed/httpd_config.conf.template" \
 	"/tmp/httpd_config.conf.template"
 
-RUN envsubst '$PHP_PKG' < "/tmp/httpd_config.conf.template" \
-    > "/usr/local/lsws/conf/httpd_config.conf"
+sed "s/\${PHP_PKG}/${PHP_PKG}/g" \
+    "/tmp/httpd_config.conf.template" \
+    "/usr/local/lsws/conf/httpd_config.conf"
 
 # Create the virtual host folders
 RUN mkdir --parents \
