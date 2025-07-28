@@ -76,12 +76,6 @@ RUN curl --silent --show-error \
 	"http://rpms.litespeedtech.com/debian/lst_repo.gpg" |\
 	apt-key add -
 
-# Install the Litespeed repository
-# Detect the current Debian release
-RUN . /etc/os-release && \
-    echo "deb http://rpms.litespeedtech.com/debian/${VERSION_CODENAME} main" \
-    > /etc/apt.sources.list.d/openlitespeed.conf
-
 RUN apt-get update
 
 # Install the Litespeed
