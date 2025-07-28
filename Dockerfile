@@ -167,12 +167,11 @@ COPY --chown="lsadm:lsadm" \
 	"/usr/local/lsws/admin/conf/admin_config.conf"
 
 # Configure the server
-
-# Template expansion: inject PHP version into config files
 COPY --chown="lsadm:lsadm" \
 	"php/litespeed/httpd_config.conf.template" \
 	"/tmp/httpd_config.conf.template"
 
+# Replace PKG variable with specific PHP version
 RUN sed "s/\${PHP_PKG}/${PHP_PKG}/g" \
     "/tmp/httpd_config.conf.template" \
     > "/usr/local/lsws/conf/httpd_config.conf"
@@ -248,5 +247,8 @@ EXPOSE 80
 
 # Set the workdir and command
 ENV PATH="/usr/local/lsws/bin:${PATH}"
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD curl -f http://localhost:80 || exit 1
 
 ENTRYPOINT ["entrypoint.sh"]
