@@ -48,8 +48,6 @@ RUN apt-get update \
 	zip \
 	unzip \
 	git \
-	webp \
-	libwebp6 \
 	memcached \
 	libmemcached-tools \
 	graphicsmagick \
