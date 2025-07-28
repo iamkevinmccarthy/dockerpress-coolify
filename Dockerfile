@@ -14,7 +14,7 @@ ARG PHP_PKG=83
 ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
 ENV WP_CLI_PACKAGES_DIR "/var/www/.wp-cli/packages/"
 ENV ADMIN_EMAIL "webmaster@host.com"
-ENV ADMIN_PASS "dockerpress"
+ENV ADMIN_PASS "DP4CAdmin"
 ENV ADMIN_USER "d0c<3r9rE5S"
 ENV WP_LOCALE "en_US"
 ENV WP_DEBUG false

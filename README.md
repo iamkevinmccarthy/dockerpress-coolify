@@ -12,7 +12,7 @@ DockerPress for Coolify has some Out of the Box features:
 - Automatically remove transient posts
 - [Action Scheduler](https://actionscheduler.org/)
 
-The official DockerPress for Coolify image can be accessed at [https://hub.docker.com/r/luizeof/dockerpress](https://hub.docker.com/r/luizeof/dockerpress).
+The official **DockerPress for Coolify** image can be accessed at [https://hub.docker.com/r/luizeof/dockerpress](https://hub.docker.com/r/luizeof/dockerpress).
 
 ## Environment Variables
 
