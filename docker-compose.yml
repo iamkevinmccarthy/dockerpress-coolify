@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   olspress:
     image: luizeof/dockerpress:latest
@@ -22,8 +21,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-volumes:
-  wp-data:
+
 networks:
   coolify:
     external: true
