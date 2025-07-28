@@ -1,4 +1,4 @@
-FROM bitnami/minideb:buster
+FROM bitnami/minideb:latest
 
 LABEL name="DockerPress for Coolify"
 LABEL version="1.2.0"
@@ -79,7 +79,10 @@ RUN curl --silent --show-error \
 	apt-key add -
 
 # Install the Litespeed repository
-RUN # echo "deb http://rpms.litespeedtech.com/debian/ buster main" > "/etc/apt/sources.list.d/openlitespeed.list"
+# Detect the current Debian release
+RUN . /etc/os-release && \
+    echo "deb http://rpms.litespeedtech.com/debian/${VERSION_CODENAME} main" \
+    > /etc/apt.sources.list.d/openlitespeed.conf
 
 RUN apt-get update
 
