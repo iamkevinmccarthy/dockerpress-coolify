@@ -1,6 +1,6 @@
 FROM bitnami/minideb:buster
 
-LABEL name="DockerPress"
+LABEL name="DockerPress for Coolify"
 LABEL version="3.0.0"
 LABEL release="2022-03-07"
 
