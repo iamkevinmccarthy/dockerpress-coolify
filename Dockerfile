@@ -173,7 +173,7 @@ COPY --chown="lsadm:lsadm" \
 	"php/litespeed/httpd_config.conf.template" \
 	"/tmp/httpd_config.conf.template"
 
-sed "s/\${PHP_PKG}/${PHP_PKG}/g" \
+RUN sed "s/\${PHP_PKG}/${PHP_PKG}/g" \
     "/tmp/httpd_config.conf.template" \
     "/usr/local/lsws/conf/httpd_config.conf"
 
