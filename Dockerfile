@@ -171,9 +171,11 @@ COPY --chown="lsadm:lsadm" \
 	"/usr/local/lsws/admin/conf/admin_config.conf"
 
 # Configure the server
-COPY --chown="lsadm:lsadm" \
-	"php/litespeed/httpd_config.conf" \
-	"/usr/local/lsws/conf/httpd_config.conf"
+
+# Template expansion: inject PHP version into config files
+COPY php/litespeed/httpd_config.conf.template /tmp/httpd_config.conf.template
+RUN envsubst '$PHP_VER' < /tmp/httpd_config.conf.template \
+    > /usr/local/lsws/conf/httpd_config.conf
 
 # Create the virtual host folders
 RUN mkdir --parents \
@@ -186,11 +188,6 @@ RUN mkdir --parents \
 COPY --chown="lsadm:lsadm" \
 	"php/litespeed/vhconf.conf" \
 	"/usr/local/lsws/conf/vhosts/wordpress/vhconf.conf"
-
-# Template expansion: inject PHP version into config files
-COPY php/litespeed/httpd_config.conf.template /tmp/httpd_config.conf.template
-RUN envsubst '$PHP_VER' < /tmp/httpd_config.conf.template \
-    > /usr/local/lsws/conf/httpd_config.conf
 
 # Set up the virtual host configuration permissions
 RUN chown --recursive "lsadm:lsadm" \
