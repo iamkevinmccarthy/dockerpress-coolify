@@ -249,6 +249,6 @@ EXPOSE 80
 ENV PATH="/usr/local/lsws/bin:${PATH}"
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-  CMD curl -f http://localhost:80 || exit 1
+  CMD curl -f http://0.0.0.0:80 || exit 1
 
 ENTRYPOINT ["entrypoint.sh"]
