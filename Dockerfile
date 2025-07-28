@@ -167,15 +167,13 @@ COPY --chown="lsadm:lsadm" \
 	"/usr/local/lsws/admin/conf/admin_config.conf"
 
 # Configure the server
-
-# Template expansion: inject PHP version into config files
 COPY --chown="lsadm:lsadm" \
-	"php/litespeed/httpd_config.conf.template" \
-	"/tmp/httpd_config.conf.template"
+	"php/litespeed/httpd_config.conf" \
+	"/usr/local/lsws/conf/httpd_config.conf"
 
-RUN sed "s/\${PHP_PKG}/${PHP_PKG}/g" \
-    "/tmp/httpd_config.conf.template" \
-    "/usr/local/lsws/conf/httpd_config.conf"
+#RUN sed "s/\${PHP_PKG}/${PHP_PKG}/g" \
+#   "/tmp/httpd_config.conf.template" \
+#    "/usr/local/lsws/conf/httpd_config.conf"
 
 # Create the virtual host folders
 RUN mkdir --parents \
