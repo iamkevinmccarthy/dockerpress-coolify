@@ -131,7 +131,7 @@ accessControl  {
 
 extprocessor PHP {
   type                    lsapi
-  address                 uds:///tmp/lshttpd/lsphp${PHP_VER%.*}.sock
+  address                 uds:///tmp/lshttpd/lsphp${PHP_VER}.sock
   maxConns                25
   env                     PHP_LSAPI_CHILDREN=25
   #env                     LSAPI_AVOID_FORK=200M
@@ -141,7 +141,7 @@ extprocessor PHP {
   persistConn             1
   respBuffer              0
   autoStart               2
-  path                    lsphp${PHP_VER%.*}/bin/lsphp
+  path                    lsphp${PHP_VER}/bin/lsphp
   backlog                 100
   instances               1
   priority                0

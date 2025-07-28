@@ -1,20 +1,20 @@
 FROM bitnami/minideb:latest
 
 LABEL name="DockerPress for Coolify"
-LABEL version="1.2.0"
+LABEL version="1.2.5"
 LABEL release="2025-07-28"
 
 WORKDIR /var/www/html
 
 # Define PHP version
-ARG PHP_VER=83
+ARG PHP_VER=8.3
 
 # ENV Defaults
 ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
 ENV WP_CLI_PACKAGES_DIR "/var/www/.wp-cli/packages/"
 ENV ADMIN_EMAIL "webmaster@host.com"
 ENV ADMIN_PASS "dockerpress"
-ENV ADMIN_USER "dockerpress"
+ENV ADMIN_USER "d0c<3r9rE5S"
 ENV WP_LOCALE "en_US"
 ENV WP_DEBUG false
 ENV WORDPRESS_DB_PREFIX "wp_"
@@ -89,36 +89,36 @@ RUN install_packages \
 
 # Install the PHP
 RUN install_packages \
-	"lsphp${PHP_VER}"
+	"lsphp${PHP_VER/./}"
 
 # Install PHP modules
 RUN install_packages \
-	"lsphp${PHP_VER}-apcu" \
-	"lsphp${PHP_VER}-common" \
-	"lsphp${PHP_VER}-curl" \
-	"lsphp${PHP_VER}-igbinary" \
-	"lsphp${PHP_VER}-imagick" \
-	"lsphp${PHP_VER}-imap" \
-	"lsphp${PHP_VER}-intl" \
-	"lsphp${PHP_VER}-ldap" \
-	"lsphp${PHP_VER}-memcached" \
-	"lsphp${PHP_VER}-msgpack" \
-	"lsphp${PHP_VER}-mysql" \
-	"lsphp${PHP_VER}-opcache" \
-	"lsphp${PHP_VER}-pear" \
-	"lsphp${PHP_VER}-pgsql" \
-	"lsphp${PHP_VER}-pspell" \
-	"lsphp${PHP_VER}-redis" \
-	"lsphp${PHP_VER}-sqlite3" \
-	"lsphp${PHP_VER}-tidy"
+	"lsphp${PHP_VER/./}-apcu" \
+	"lsphp${PHP_VER/./}-common" \
+	"lsphp${PHP_VER/./}-curl" \
+	"lsphp${PHP_VER/./}-igbinary" \
+	"lsphp${PHP_VER/./}-imagick" \
+	"lsphp${PHP_VER/./}-imap" \
+	"lsphp${PHP_VER/./}-intl" \
+	"lsphp${PHP_VER/./}-ldap" \
+	"lsphp${PHP_VER/./}-memcached" \
+	"lsphp${PHP_VER/./}-msgpack" \
+	"lsphp${PHP_VER/./}-mysql" \
+	"lsphp${PHP_VER/./}-opcache" \
+	"lsphp${PHP_VER/./}-pear" \
+	"lsphp${PHP_VER/./}-pgsql" \
+	"lsphp${PHP_VER/./}-pspell" \
+	"lsphp${PHP_VER/./}-redis" \
+	"lsphp${PHP_VER/./}-sqlite3" \
+	"lsphp${PHP_VER/./}-tidy"
 
 # Set the default PHP CLI
 RUN ln --symbolic --force \
-	"/usr/local/lsws/lsphp${PHP_VER}/bin/lsphp" \
+	"/usr/local/lsws/lsphp${PHP_VER/./}/bin/lsphp" \
 	"/usr/local/lsws/fcgi-bin/lsphp5"
 
 RUN ln --symbolic --force \
-    "/usr/local/lsws/lsphp${PHP_VER}/bin/php${PHP_VER%.*}" \
+    "/usr/local/lsws/lsphp${PHP_VER/./}/bin/php${PHP_VER}" \
     "/usr/bin/php"
 
 # Install the certificates
@@ -131,11 +131,11 @@ RUN install_packages \
 	"tzdata"
 
 # PHP Settings
-RUN sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /usr/local/lsws/lsphp${PHP_VER}/etc/php/${PHP_VER%.*}/litespeed/php.ini
-RUN sed -i 's/post_max_size = 8M/post_max_size = 256M/g' /usr/local/lsws/lsphp${PHP_VER}/etc/php/${PHP_VER%.*}/litespeed/php.ini
-RUN sed -i 's/memory_limit = 128M/memory_limit = 512M/g' /usr/local/lsws/lsphp${PHP_VER}/etc/php/${PHP_VER%.*}/litespeed/php.ini
+RUN sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /usr/local/lsws/lsphp${PHP_VER/./}/etc/php/${PHP_VER}/litespeed/php.ini
+RUN sed -i 's/post_max_size = 8M/post_max_size = 256M/g' /usr/local/lsws/lsphp${PHP_VER/./}/etc/php/${PHP_VER}/litespeed/php.ini
+RUN sed -i 's/memory_limit = 128M/memory_limit = 512M/g' /usr/local/lsws/lsphp${PHP_VER/./}/etc/php/${PHP_VER}/litespeed/php.ini
 
-COPY php/config/opcache.ini /usr/local/lsws/lsphp${PHP_VER}/etc/php/${PHP_VER%.*}/mods-available/opcache.ini
+COPY php/config/opcache.ini /usr/local/lsws/lsphp${PHP_VER/./}/etc/php/${PHP_VER}/mods-available/opcache.ini
 
 RUN touch /var/www/.opcache
 
