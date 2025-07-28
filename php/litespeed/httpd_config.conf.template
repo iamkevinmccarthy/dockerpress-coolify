@@ -129,9 +129,9 @@ accessControl  {
   allow                   ALL
 }
 
-extprocessor PHP-7.4 {
+extprocessor PHP {
   type                    lsapi
-  address                 uds:///tmp/lshttpd/lsphp74.sock
+  address                 uds:///tmp/lshttpd/lsphp%%PHP_VERSION%%.sock
   maxConns                25
   env                     PHP_LSAPI_CHILDREN=25
   #env                     LSAPI_AVOID_FORK=200M
@@ -141,7 +141,7 @@ extprocessor PHP-7.4 {
   persistConn             1
   respBuffer              0
   autoStart               2
-  path                    lsphp74/bin/lsphp
+  path                    lsphp%%PHP_VERSION%%/bin/lsphp
   backlog                 100
   instances               1
   priority                0
@@ -152,7 +152,7 @@ extprocessor PHP-7.4 {
 }
 
 scripthandler  {
-  add                     lsapi:PHP-7.4 php
+  add                     lsapi:PHP php
 }
 
 railsDefaults  {

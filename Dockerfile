@@ -1,10 +1,13 @@
 FROM bitnami/minideb:buster
 
 LABEL name="DockerPress for Coolify"
-LABEL version="1.0.0"
+LABEL version="1.2.0"
 LABEL release="2025-07-28"
 
 WORKDIR /var/www/html
+
+# Define PHP version
+ARG PHP_VER=83
 
 # ENV Defaults
 ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
@@ -19,9 +22,6 @@ ENV WORDPRESS_DB_PORT 3306
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1"
 ENV DEBIAN_FRONTEND="noninteractive"
 ENV DISABLE_WP_CRON=true
-
-# Define PHP version
-ARG PHP_VER=83
 
 # HTTP port
 EXPOSE "80/tcp"
@@ -140,11 +140,11 @@ RUN  sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /usr/local
 RUN sed -i 's/post_max_size = 8M/post_max_size = 256M/g' /usr/local/lsws/lsphp${PHP_VER}/etc/php/${PHP_VER%.*}/litespeed/php.ini
 RUN sed -i 's/memory_limit = 128M/memory_limit = 512M/g' /usr/local/lsws/lsphp${PHP_VER}/etc/php/${PHP_VER%.*}/litespeed/php.ini
 
-COPY php-latest/config/opcache.ini /usr/local/lsws/lsphp${PHP_VER}/etc/php/${PHP_VER%.*}/mods-available/opcache.ini
+COPY php/config/opcache.ini /usr/local/lsws/lsphp${PHP_VER}/etc/php/${PHP_VER%.*}/mods-available/opcache.ini
 
 RUN touch /var/www/.opcache
 
-COPY php-latest/memcached.conf /etc/memcached.conf
+COPY php/memcached.conf /etc/memcached.conf
 
 # Create the directories
 RUN mkdir --parents \
@@ -167,12 +167,12 @@ RUN chown --recursive "lsadm:lsadm" \
 
 # Configure the admin interface
 COPY --chown="lsadm:lsadm" \
-	"php-latest/litespeed/admin_config.conf" \
+	"php/litespeed/admin_config.conf" \
 	"/usr/local/lsws/admin/conf/admin_config.conf"
 
 # Configure the server
 COPY --chown="lsadm:lsadm" \
-	"php-latest/litespeed/httpd_config.conf" \
+	"php/litespeed/httpd_config.conf" \
 	"/usr/local/lsws/conf/httpd_config.conf"
 
 # Create the virtual host folders
@@ -184,11 +184,11 @@ RUN mkdir --parents \
 
 # Configure the virtual host
 COPY --chown="lsadm:lsadm" \
-	"php-latest/litespeed/vhconf.conf" \
+	"php/litespeed/vhconf.conf" \
 	"/usr/local/lsws/conf/vhosts/wordpress/vhconf.conf"
 
 # Template expansion: inject PHP version into config files
-COPY php-latest/litespeed/httpd_config.conf.template /tmp/httpd_config.conf.template
+COPY php/litespeed/httpd_config.conf.template /tmp/httpd_config.conf.template
 RUN envsubst '$PHP_VER' < /tmp/httpd_config.conf.template \
     > /usr/local/lsws/conf/httpd_config.conf
 
