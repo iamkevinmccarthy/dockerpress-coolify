@@ -98,8 +98,8 @@ function install_wordpress() {
 
     # if Wordpress is installed
     if ! $(wp core is-installed --path=/var/www/html); then
-      echo "Installing Wordpress for $SERVICE_FQDN_OLSPRESS ..."
-      wp core install --url=$SERVICE_FQDN_OLSPRESS \
+      echo "Installing Wordpress for $SERVICE_URL_OLSPRESS ..."
+      wp core install --url=$SERVICE_URL_OLSPRESS \
         --title=Dockerpress \
         --admin_user=$ADMIN_USER \
         --admin_password=$ADMIN_PASS \
