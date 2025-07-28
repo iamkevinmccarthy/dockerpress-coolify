@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 # start memcache service
 service memcached start
@@ -14,16 +13,18 @@ function finish() {
 
 function update_wp_config() {
   echo "Updating wp-config.php ..."
-  wp config set DB_NAME $WORDPRESS_DB_NAME --add --type=constant --path=/var/www/html
-  wp config set DB_USER $WORDPRESS_DB_USER --add --type=constant --path=/var/www/html
-  wp config set DB_PASSWORD $WORDPRESS_DB_PASSWORD --add --type=constant --path=/var/www/html
-  wp config set DB_HOST "$WORDPRESS_DB_HOST" --add --type=constant --path=/var/www/html
-  wp config set DB_PREFIX $WORDPRESS_DB_PREFIX --add --type=constant --path=/var/www/html
-  wp config set DB_PORT $WORDPRESS_DB_PORT --raw --add --type=constant --path=/var/www/html
-  wp config set WP_DEBUG $WP_DEBUG --raw --add --type=constant --path=/var/www/html
-  wp config set WP_MEMORY_LIMIT 512M --add --type=constant --path=/var/www/html
-  wp config set WP_MAX_MEMORY_LIMIT 512M --add --type=constant --path=/var/www/html
-  wp config set DISABLE_WP_CRON $DISABLE_WP_CRON --raw --add --type=constant --path=/var/www/html
+  wp config set WP_SITEURL "https://$COOLIFY_FQDN" --add --type=constant
+  wp config set WP_HOME "https://$COOLIFY_FQDN" --add --type=constant
+  wp config set DB_NAME $WORDPRESS_DB_NAME --add --type=constant
+  wp config set DB_USER $WORDPRESS_DB_USER --add --type=constant
+  wp config set DB_PASSWORD $WORDPRESS_DB_PASSWORD --add --type=constant
+  wp config set DB_HOST "$WORDPRESS_DB_HOST:$WORDPRESS_DB_PORT" --add --type=constant
+  wp config set DB_PREFIX $WORDPRESS_DB_PREFIX --add --type=constant
+  wp config set DB_PORT $WORDPRESS_DB_PORT --raw --add --type=constant
+  wp config set WP_DEBUG $WP_DEBUG --raw --add --type=constant
+  wp config set WP_MEMORY_LIMIT 512M --add --type=constant
+  wp config set WP_MAX_MEMORY_LIMIT 512M --add --type=constant
+  wp config set DISABLE_WP_CRON $DISABLE_WP_CRON --raw --add --type=constant
 }
 
 function generate_litespeed_password() {
@@ -75,7 +76,7 @@ function create_wordpress_database() {
     mysql --no-defaults -h $WORDPRESS_DB_HOST --port $WORDPRESS_DB_PORT -u root -p$MYSQL_ROOT_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;"
   else
     echo "Try create Database if not exists using $WORDPRESS_DB_USER user ..."
-    mysql --no-defaults --ssl --ssl-verify-server-cert=0 -h $WORDPRESS_DB_HOST --port $WORDPRESS_DB_PORT -u $WORDPRESS_DB_USER -p$WORDPRESS_DB_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;"
+    mysql --no-defaults -h $WORDPRESS_DB_HOST --port $WORDPRESS_DB_PORT -u $WORDPRESS_DB_USER -p$WORDPRESS_DB_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;"
   fi
 }
 
@@ -88,18 +89,18 @@ function install_wordpress() {
     wp core download --path=/var/www/html
 
     echo "Creating wp-config.file ..."
-    cp /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
+    cp /var/www/wp-config-sample.php /var/www/html/wp-config.php
     chown www-data:www-data /var/www/html/wp-config.php
     update_wp_config
 
     echo "Shuffling wp-config.php salts ..."
-    wp config shuffle-salts --path=/var/www/html
+    wp config shuffle-salts
 
     # if Wordpress is installed
-    if ! $(wp core is-installed --path=/var/www/html); then
-      echo "Installing Wordpress for $SERVICE_URL_OLSPRESS ..."
-      wp core install --url=$SERVICE_URL_OLSPRESS \
-        --title=Dockerpress \
+    if ! $(wp core is-installed); then
+      echo "Installing Wordpress for $COOLIFY_FQDN ..."
+      wp core install --url=$COOLIFY_FQDN \
+        --title=WordPress \
         --admin_user=$ADMIN_USER \
         --admin_password=$ADMIN_PASS \
         --admin_email=$ADMIN_EMAIL \
@@ -122,7 +123,7 @@ function install_wordpress() {
 
       cp /var/www/.htaccess /var/www/html
       chown -R www-data:www-data /var/www/html/.htaccess
-      wp rewrite structure '/%postname%/' --path=/var/www/html
+      wp rewrite structure '/%postname%/'
 
     else
       echo 'Wordpress is already installed.'
@@ -149,7 +150,7 @@ cd /var/www/html
 # Generate litespeed Admin Password
 generate_litespeed_password
 
-trap finish SIGTERM
+trap cleanup SIGTERM
 
 #### Setting Up MySQL Client Defaults
 setup_mysql_client
@@ -176,7 +177,7 @@ install_dockerpress_plugins
 # update file permissions
 chown -R www-data:www-data /var/www/html
 
-wp core verify-checksums --path=/var/www/html
+wp core verify-checksums
 
 service memcached start
 
@@ -192,3 +193,5 @@ cat '/usr/local/lsws/adminpasswd'
 # Tail the logs to stdout
 tail -f \
   '/var/log/litespeed/access.log'
+
+exec "$@"
