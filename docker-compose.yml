@@ -2,6 +2,7 @@ version: '3.8'
 services:
   olspress:
     image: luizeof/dockerpress:latest
+    container_name: dockerpress
     environment:
       - SERVICE_FQDN_OLSPRESS
       - WORDPRESS_DB_HOST=${WORDPRESS_DB_HOST}
