@@ -1,27 +1,5 @@
 #!/bin/bash
 
-# Generate /etc/msmtprc from template
-: ${SMTP_HOST:="smtp.gmail.com"}
-: ${SMTP_PORT:="587"}
-: ${SMTP_FROM:="webmaster@standardforge.com"}
-: ${SMTP_USER:=""}
-: ${SMTP_PASSWORD:=""}
-
-envsubst '$SMTP_HOST $SMTP_PORT $SMTP_FROM $SMTP_USER $SMTP_PASSWORD' \
-    < /opt/msmtprc.tmpl \
-    > /etc/msmtprc
-
-chmod 600 /etc/msmtprc
-
-# after envsubst writes /etc/msmtprc
-ln -sf /usr/bin/msmtp /usr/sbin/sendmail
-ln -sf /usr/bin/msmtp /usr/bin/sendmail
-
-echo "$(date): Env state → SMTP_HOST='$SMTP_HOST', SMTP_FROM='$SMTP_FROM', SMTP_PASSWORD='$SMTP_PASSWORD'" > /tmp/debug.log   && envsubst ... > /etc/msmtprc
-
-echo "sendmail_path = /usr/bin/msmtp -t" >> /usr/local/lsws/lsphp${PHP_PKG}/etc/php/${PHP_VER}/litespeed/php.ini
-
-
 # remove default index.html if exists
 rm -f /var/www/html/index.html
 

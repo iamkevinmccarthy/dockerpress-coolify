@@ -115,13 +115,8 @@ RUN install_packages \
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        msmtp \
         ca-certificates \
-        gettext-base && \
     rm -rf /var/lib/apt/lists/*
-
-# we keep a template, no credentials
-COPY msmtprc.tmpl /opt/msmtprc.tmpl
 
 # Set the default PHP CLI
 RUN ln --symbolic --force \
