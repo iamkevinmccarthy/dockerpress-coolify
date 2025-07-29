@@ -59,7 +59,7 @@ function install_wp_cli() {
 }
 
 function setup_mysql_optimize() {
-  echo "Setting up MySL Optimize..."
+  echo "Setting up MySQL Optimize..."
   sed -i -e "s/WORDPRESS_DB_HOST/$WORDPRESS_DB_HOST/g" /usr/local/bin/mysql-optimize
   sed -i -e "s/WORDPRESS_DB_USER/$WORDPRESS_DB_USER/g" /usr/local/bin/mysql-optimize
   sed -i -e "s/WORDPRESS_DB_PASSWORD/$WORDPRESS_DB_PASSWORD/g" /usr/local/bin/mysql-optimize
@@ -82,7 +82,7 @@ function install_wordpress() {
 
   if [ ! -e /var/www/html/wp-config.php ]; then
 
-    echo "Wordpress not found, downloading latest version ..."
+    echo "WordPress not found, downloading latest version ..."
     wp core download --path=/var/www/html
 
     echo "Creating wp-config.file ..."
@@ -123,7 +123,7 @@ function install_wordpress() {
       wp rewrite structure '/%postname%/'
 
     else
-      echo 'Wordpress is already installed.'
+      echo 'WordPress is already installed.'
     fi
   else
     echo 'wp-config.php file already exists.'
