@@ -13,6 +13,10 @@ envsubst '$SMTP_HOST $SMTP_PORT $SMTP_FROM $SMTP_USER $SMTP_PASSWORD' \
 
 chmod 600 /etc/msmtprc
 
+# after envsubst writes /etc/msmtprc
+ln -sf /usr/bin/msmtp /usr/sbin/sendmail
+ln -sf /usr/bin/msmtp /usr/bin/sendmail
+
 # remove default index.html if exists
 rm -f /var/www/html/index.html
 
