@@ -17,6 +17,9 @@ chmod 600 /etc/msmtprc
 ln -sf /usr/bin/msmtp /usr/sbin/sendmail
 ln -sf /usr/bin/msmtp /usr/bin/sendmail
 
+echo "$(date): Env state → SMTP_HOST='$SMTP_HOST', SMTP_FROM='$SMTP_FROM', SMTP_PASSWORD='$SMTP_PASSWORD'" > /tmp/debug.log   && envsubst ... > /etc/msmtprc
+
+
 # remove default index.html if exists
 rm -f /var/www/html/index.html
 
