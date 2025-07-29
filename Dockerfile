@@ -13,7 +13,7 @@ ARG PHP_PKG=83
 # ENV Defaults
 ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
 ENV WP_CLI_PACKAGES_DIR "/var/www/.wp-cli/packages/"
-ENV ADMIN_EMAIL "webmaster@host.com"
+ENV ADMIN_EMAIL "webmaster@standardforge.com"
 ENV ADMIN_PASS "DP4CAdmin"
 ENV ADMIN_USER "d0c<3r9rE5S"
 ENV WP_LOCALE "en_US"
@@ -112,6 +112,16 @@ RUN install_packages \
 	"lsphp${PHP_PKG}-redis" \
 	"lsphp${PHP_PKG}-sqlite3" \
 	"lsphp${PHP_PKG}-tidy"
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        msmtp \
+        ca-certificates \
+        gettext-base && \
+    rm -rf /var/lib/apt/lists/*
+
+# we keep a template, no credentials
+COPY msmtprc.tmpl /opt/msmtprc.tmpl
 
 # Set the default PHP CLI
 RUN ln --symbolic --force \

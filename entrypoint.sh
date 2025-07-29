@@ -1,7 +1,17 @@
 #!/bin/bash
 
-# start memcache service
-service memcached start
+# Generate /etc/msmtprc from template
+: ${SMTP_HOST:="smtp.gmail.com"}
+: ${SMTP_PORT:="587"}
+: ${SMTP_FROM:="webmaster@standardforge.com"}
+: ${SMTP_USER:=""}
+: ${SMTP_PASSWORD:=""}
+
+envsubst '$SMTP_HOST $SMTP_PORT $SMTP_FROM $SMTP_USER $SMTP_PASSWORD' \
+    < /opt/msmtprc.tmpl \
+    > /etc/msmtprc
+
+chmod 600 /etc/msmtprc
 
 # remove default index.html if exists
 rm -f /var/www/html/index.html
@@ -150,7 +160,7 @@ cd /var/www/html
 # Generate litespeed Admin Password
 generate_litespeed_password
 
-trap cleanup SIGTERM
+trap finish SIGTERM
 
 #### Setting Up MySQL Client Defaults
 setup_mysql_client
@@ -179,6 +189,7 @@ chown -R www-data:www-data /var/www/html
 
 wp core verify-checksums
 
+# start memcache service
 service memcached start
 
 # Start the LiteSpeed
