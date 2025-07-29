@@ -113,11 +113,6 @@ RUN install_packages \
 	"lsphp${PHP_PKG}-sqlite3" \
 	"lsphp${PHP_PKG}-tidy"
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        ca-certificates \
-    rm -rf /var/lib/apt/lists/*
-
 # Set the default PHP CLI
 RUN ln --symbolic --force \
 	"/usr/local/lsws/lsphp${PHP_PKG}/bin/lsphp" \
