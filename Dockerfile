@@ -206,7 +206,7 @@ RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 # Default Volume for Web
 VOLUME /var/www/html
 
-COPY wordpress/.htaccess /var/www
+COPY wordpress/.htaccess /var/www/html
 
 COPY wordpress/wp-config-sample.php /var/www/wp-config-sample.php
 
