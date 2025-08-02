@@ -242,6 +242,10 @@ RUN { \
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
+# Add Coolify-compatible healthcheck
+HEALTHCHECK --interval=10s --timeout=3s --start-period=30s --retries=3 \
+  CMD curl -f http://localhost/wp-admin/ || exit 1
+
 # Default Port for Apache
 EXPOSE 80
 
