@@ -28,7 +28,7 @@ function generate_litespeed_password() {
   if [ -n "${ADMIN_PASSWORD}" ]; then
     ENCRYPT_PASSWORD="$(/usr/local/lsws/admin/fcgi-bin/admin_php -q '/usr/local/lsws/admin/misc/htpasswd.php' "${ADMIN_PASSWORD}")"
     echo "admin:${ENCRYPT_PASSWORD}" >'/usr/local/lsws/admin/conf/htpasswd'
-    echo "WebAdmin user/password is admin/${ADMIN_PASSWORD}" >'/usr/local/lsws/adminpasswd'
+    echo "OLS WebAdmin user/password is admin/${ADMIN_PASSWORD}" >'/usr/local/lsws/adminpasswd'
   fi
 }
 
@@ -96,27 +96,37 @@ function install_wordpress() {
     # if Wordpress is installed
     if ! $(wp core is-installed); then
       echo "Installing Wordpress for $COOLIFY_FQDN ..."
-      wp core install --url=$COOLIFY_FQDN \
-        --title=WordPress \
-        --admin_user=$ADMIN_USER \
-        --admin_password=$ADMIN_PASS \
-        --admin_email=$ADMIN_EMAIL \
-        --skip-email \
-        --path=/var/www/html
+      if [ "${WP_MULTISITE:-false}" = "true" ]; then
+        echo "define('WP_ALLOW_MULTISITE', true);" >> /var/www/html/wp-config.php
+        wp core multisite-install --url="$COOLIFY_FQDN" --title="WordPress" --admin_user="$ADMIN_USER" --admin_password="$ADMIN_PASS" --admin_email="$ADMIN_EMAIL" --subdomains="${WP_SUBDOMAINS:-false}" --skip-email --path=/var/www/html
+      else
+        wp core install --url="$COOLIFY_FQDN" \
+          --title="WordPress" \
+          --admin_user="$ADMIN_USER" \
+          --admin_password="$ADMIN_PASS" \
+          --admin_email="$ADMIN_EMAIL" \
+          --skip-email \
+          --path=/var/www/html
+      fi
 
       # Updating Plugins ...
-      echo "Updating plugins ..."
+      echo "Updating plugins..."
       wp plugin update --all --path=/var/www/html
 
-      # Remove unused Dolly
+      # Remove unused Dolly ...
       echo "Remove Dolly..."
       wp plugin delete hello --path=/var/www/html
 
-      # Updating Themes ...
-      echo "Updating themes ..."
-      wp theme update --all --path=/var/www/html
+	  # Removing old default themes ...
+	  echo "Removing all but the latest default theme..."
+	  active_theme=$(wp theme list --status=active --field=name --path=/var/www/html)
+	  wp theme delete $(wp theme list --field=name --path=/var/www/html | grep -v "^${active_theme}$") --path=/var/www/html
 
-      echo "Done Installing."
+	  # Updating Themes ...
+	  echo "Updating active theme..."
+	  wp theme update "$active_theme" --path=/var/www/html
+
+      echo "WordPress install complete. Happy creating!"
 
       cp /var/www/.htaccess /var/www/html
       chown -R www-data:www-data /var/www/html/.htaccess
@@ -124,10 +134,12 @@ function install_wordpress() {
 
     else
       echo 'WordPress is already installed.'
+      echo 'Manual conversion to multisite required via WP admin: enable multisite in wp-config.php, then follow Network Setup instructions.'
     fi
   else
     echo 'wp-config.php file already exists.'
     update_wp_config
+    echo 'Manual conversion to multisite required via WP admin: enable multisite in wp-config.php, then follow Network Setup instructions.'
   fi
 }
 
